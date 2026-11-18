@@ -1,0 +1,31 @@
+# Core
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-dotenv==1.0.1
+pydantic==2.9.2
+
+# LLM
+anthropic==0.34.2
+
+# Embeddings & Vector Store
+sentence-transformers==3.1.1
+qdrant-client==1.11.3
+
+# Sparse Retrieval
+rank-bm25==0.2.2
+
+# Document Processing
+pypdf==4.3.1
+python-docx==1.1.2
+tiktoken==0.7.0
+
+# Re-ranking
+# cross-encoder via sentence-transformers (included above)
+
+# Guardrails
+guardrails-ai==0.5.14
+
+# Utilities
+numpy==1.26.4
+httpx==0.27.2
+rich==13.8.1
