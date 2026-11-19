@@ -29,7 +29,7 @@ from ingest.vector_store import VectorStore
 from ingest.bm25_index import BM25Index
 from retrieval.hybrid_retriever import HybridRetriever
 from reranker.cross_encoder import Reranker
-from guardrails.guards import GuardRail
+from app_guardrails.guards import GuardRail
 from agent.core import RAGAgent
 
 
@@ -170,3 +170,4 @@ def clear_history():
     """Reset agent conversation history."""
     state.agent.reset()
     return {"status": "cleared"}
+

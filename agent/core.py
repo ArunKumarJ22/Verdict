@@ -25,7 +25,7 @@ from typing import List
 
 import anthropic
 
-from guardrails.guards import GuardRail, GuardStatus
+from app_guardrails.guards import GuardRail, GuardStatus
 from retrieval.hybrid_retriever import HybridRetriever
 from reranker.cross_encoder import Reranker
 
@@ -287,3 +287,4 @@ class RAGAgent:
         max_messages = self.MAX_HISTORY_TURNS * 2
         if len(self.history) > max_messages:
             self.history = self.history[-max_messages:]
+
