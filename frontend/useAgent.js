@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { queryAgent, clearHistory as apiClearHistory } from "../lib/api";
+﻿import { useState, useCallback } from "react";
+import { queryAgent, clearHistory as apiClearHistory } from "./api";
 
 export function useAgent() {
   const [messages, setMessages]     = useState([]);
@@ -81,3 +81,4 @@ export function useAgent() {
 
   return { messages, citations, guardEvents, isLoading, sendQuery, clearHistory };
 }
+

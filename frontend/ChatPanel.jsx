@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 
 export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
   const [input, setInput] = useState("");
@@ -30,7 +30,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
       <div className="chat-thread">
         {messages.length === 0 && (
           <div className="chat-welcome">
-            <span className="chat-welcome-icon">◈</span>
+            <span className="chat-welcome-icon">â—ˆ</span>
             <p className="chat-welcome-title">Ask anything about your documents</p>
             <p className="chat-welcome-sub">
               Ingest a document first, then ask questions.<br />
@@ -76,7 +76,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask a question… (Enter to send, Shift+Enter for newline)"
+            placeholder="Ask a questionâ€¦ (Enter to send, Shift+Enter for newline)"
             rows={1}
             disabled={isLoading}
           />
@@ -86,7 +86,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
             disabled={!input.trim() || isLoading}
             aria-label="Send"
           >
-            ↑
+            â†‘
           </button>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
           color: var(--text-primary);
         }
 
-        /* ── Messages ───────────────────── */
+        /* â”€â”€ Messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .message {
           display: flex;
           flex-direction: column;
@@ -220,7 +220,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
           color: var(--text-muted);
         }
 
-        /* ── Thinking indicator ───────── */
+        /* â”€â”€ Thinking indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .thinking {
           display: flex;
           align-items: center;
@@ -252,7 +252,7 @@ export default function ChatPanel({ messages, isLoading, onSend, onClear }) {
           40%            { opacity: 1;   transform: scale(1); }
         }
 
-        /* ── Input area ─────────────── */
+        /* â”€â”€ Input area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .chat-input-area {
           padding: 12px 20px 16px;
           border-top: 1px solid var(--border);
@@ -341,7 +341,8 @@ function ThinkingIndicator() {
         <span className="thinking-dot" />
         <span className="thinking-dot" />
       </div>
-      retrieving · reranking · generating
+      retrieving Â· reranking Â· generating
     </div>
   );
 }
+

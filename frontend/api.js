@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+﻿const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, options);
@@ -37,3 +37,4 @@ export async function ingestText(text, source = "paste") {
 export async function clearHistory() {
   return request("/history", { method: "DELETE" });
 }
+

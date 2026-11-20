@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { fetchHealth } from "../lib/api";
+﻿import { useState, useEffect } from "react";
+import { fetchHealth } from "./api";
 
 export function useHealth(intervalMs = 15000) {
   const [health, setHealth] = useState(null);
@@ -24,3 +24,4 @@ export function useHealth(intervalMs = 15000) {
 
   return { health, loading };
 }
+

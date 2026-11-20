@@ -1,4 +1,4 @@
-export default function SidePanel({ activeTab, onTabChange, citations, guardEvents }) {
+﻿export default function SidePanel({ activeTab, onTabChange, citations, guardEvents }) {
   return (
     <div className="panel side-panel">
       <div className="tab-bar">
@@ -63,7 +63,7 @@ export default function SidePanel({ activeTab, onTabChange, citations, guardEven
           gap: 10px;
         }
 
-        /* ── Citations ─────────────────── */
+        /* â”€â”€ Citations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .citation-card {
           background: var(--bg-raised);
           border: 1px solid var(--border-subtle);
@@ -118,7 +118,7 @@ export default function SidePanel({ activeTab, onTabChange, citations, guardEven
           overflow: hidden;
         }
 
-        /* ── Guard Events ──────────────── */
+        /* â”€â”€ Guard Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .event-row {
           background: var(--bg-raised);
           border: 1px solid var(--border-subtle);
@@ -181,7 +181,7 @@ function CitationsTab({ citations }) {
   if (citations.length === 0) {
     return (
       <div className="empty-state">
-        <span className="empty-icon">◧</span>
+        <span className="empty-icon">â—§</span>
         <span className="empty-label">No sources yet</span>
         <span className="empty-sub">Sources retrieved for each answer will appear here with relevance scores.</span>
       </div>
@@ -195,7 +195,7 @@ function CitationsTab({ citations }) {
           <div className="citation-header">
             <span className="citation-source" title={c.source}>{c.source}</span>
             {c.page && <span className="citation-page">p.{c.page}</span>}
-            <span className="citation-score">score {c.score?.toFixed(3) ?? "—"}</span>
+            <span className="citation-score">score {c.score?.toFixed(3) ?? "â€”"}</span>
           </div>
           <p className="citation-text">{c.text}</p>
         </div>
@@ -208,7 +208,7 @@ function EventsTab({ events }) {
   if (events.length === 0) {
     return (
       <div className="empty-state">
-        <span className="empty-icon">◫</span>
+        <span className="empty-icon">â—«</span>
         <span className="empty-label">Guard log is clean</span>
         <span className="empty-sub">Blocked queries and flagged responses will show up here in real time.</span>
       </div>
@@ -242,3 +242,4 @@ function pillStyle(status) {
   };
   return map[status] || {};
 }
+
