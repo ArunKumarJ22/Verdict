@@ -21,13 +21,12 @@ RUN pip install --no-cache-dir \
 
 # Copy dependency files
 COPY requirements.txt .
-COPY constraints.txt .
+
 
 # Install remaining dependencies
 RUN pip install --no-cache-dir \
     --timeout 120 \
     --retries 10 \
-    --constraint constraints.txt \
     -r requirements.txt
 
 # Copy application
