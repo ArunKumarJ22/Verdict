@@ -11,13 +11,6 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
-    healthCheckPath: /health
-
-    # Render gives free services a persistent disk (500MB)
-    disk:
-      name: bm25-data
-      mountPath: /app/data
-      sizeGB: 1
 
     envVars:
       - key: ANTHROPIC_API_KEY
