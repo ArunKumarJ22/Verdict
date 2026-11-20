@@ -1,22 +1,41 @@
+
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# System deps for pypdf / docx
+# System dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential curl \
+    build-essential \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps first (layer cache)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
-# Copy source
+# Install CPU-only PyTorch
+RUN pip install --no-cache-dir \
+    --timeout 120 \
+    --retries 10 \
+    --index-url https://download.pytorch.org/whl/cpu \
+    torch==2.5.1
+
+# Copy dependency files
+COPY requirements.txt .
+COPY constraints.txt .
+
+# Install remaining dependencies
+RUN pip install --no-cache-dir \
+    --timeout 120 \
+    --retries 10 \
+    --constraint constraints.txt \
+    -r requirements.txt
+
+# Copy application
 COPY . .
 
-# Data directory for BM25 persistence
+# Data directory
 RUN mkdir -p /app/data
 
-EXPOSE 8000
+EXPOSE 10000
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
