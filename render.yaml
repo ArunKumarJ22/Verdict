@@ -1,10 +1,9 @@
+
 # render.yaml — Render Blueprint
-# Defines all services in one file. Push to GitHub, then connect on Render.
-# Docs: https://render.com/docs/blueprint-spec
 
 services:
 
-  # ── FastAPI Backend ─────────────────────────────────────────────────
+  # ── FastAPI Backend ──────────────────────────────
   - type: web
     name: verdict-api
     runtime: docker
@@ -14,13 +13,13 @@ services:
 
     envVars:
       - key: ANTHROPIC_API_KEY
-        sync: false                  # you set this manually in Render dashboard
+        sync: false
 
       - key: QDRANT_URL
-        sync: false                  # paste your Qdrant Cloud URL
+        sync: false
 
       - key: QDRANT_API_KEY
-        sync: false                  # paste your Qdrant Cloud API key
+        sync: false
 
       - key: QDRANT_COLLECTION
         value: agent_rag_docs
@@ -55,13 +54,12 @@ services:
           type: web
           property: host
 
-  # ── React Frontend ──────────────────────────────────────────────────
+  # ── React Frontend ───────────────────────────────
   - type: web
     name: verdict-frontend
     runtime: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
-    plan: free
 
     headers:
       - path: /*
