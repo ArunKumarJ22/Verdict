@@ -1,0 +1,88 @@
+# render.yaml — Render Blueprint
+# Defines all services in one file. Push to GitHub, then connect on Render.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+
+  # ── FastAPI Backend ─────────────────────────────────────────────────
+  - type: web
+    name: verdict-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+
+    # Render gives free services a persistent disk (500MB)
+    disk:
+      name: bm25-data
+      mountPath: /app/data
+      sizeGB: 1
+
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false                  # you set this manually in Render dashboard
+
+      - key: QDRANT_URL
+        sync: false                  # paste your Qdrant Cloud URL
+
+      - key: QDRANT_API_KEY
+        sync: false                  # paste your Qdrant Cloud API key
+
+      - key: QDRANT_COLLECTION
+        value: agent_rag_docs
+
+      - key: EMBED_MODEL
+        value: all-MiniLM-L6-v2
+
+      - key: RERANK_MODEL
+        value: cross-encoder/ms-marco-MiniLM-L-6-v2
+
+      - key: CHUNK_SIZE
+        value: "512"
+
+      - key: CHUNK_OVERLAP
+        value: "64"
+
+      - key: DENSE_TOP_K
+        value: "20"
+
+      - key: SPARSE_TOP_K
+        value: "20"
+
+      - key: RERANK_TOP_K
+        value: "5"
+
+      - key: BM25_INDEX_PATH
+        value: /app/data/bm25_index.pkl
+
+      - key: FRONTEND_URL
+        fromService:
+          name: verdict-frontend
+          type: web
+          property: host
+
+  # ── React Frontend ──────────────────────────────────────────────────
+  - type: web
+    name: verdict-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    plan: free
+
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: verdict-api
+          type: web
+          property: host

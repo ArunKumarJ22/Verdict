@@ -43,12 +43,25 @@ class VectorStore:
         collection: str | None = None,
         dimension: int = 384,
     ):
-        self.host = host or os.getenv("QDRANT_HOST", "localhost")
-        self.port = int(port or os.getenv("QDRANT_PORT", 6333))
         self.collection = collection or os.getenv("QDRANT_COLLECTION", "agent_rag_docs")
         self.dimension = dimension
 
-        self._client = QdrantClient(host=self.host, port=self.port)
+        # Qdrant Cloud: set QDRANT_URL + QDRANT_API_KEY in env
+        # Local Docker: set QDRANT_HOST + QDRANT_PORT (defaults: localhost:6333)
+        qdrant_url = os.getenv("QDRANT_URL")
+        qdrant_api_key = os.getenv("QDRANT_API_KEY")
+
+        if qdrant_url:
+            # Cloud mode — URL-based connection with API key
+            self._client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key)
+            print(f"[VectorStore] Connected to Qdrant Cloud: {qdrant_url}")
+        else:
+            # Local mode — host/port
+            self.host = host or os.getenv("QDRANT_HOST", "localhost")
+            self.port = int(port or os.getenv("QDRANT_PORT", 6333))
+            self._client = QdrantClient(host=self.host, port=self.port)
+            print(f"[VectorStore] Connected to local Qdrant: {self.host}:{self.port}")
+
         self._ensure_collection()
 
     # ------------------------------------------------------------------
