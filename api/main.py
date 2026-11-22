@@ -10,18 +10,20 @@ FastAPI backend exposing three endpoints:
 
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Annotated
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 load_dotenv()
 
-# Import pipeline components
 from agent.core import RAGAgent
+from api.auth import get_current_user
 from app_guardrails.guards import GuardRail
 from ingest.pipeline import IngestPipeline
 from reranker.cross_encoder import Reranker
@@ -71,9 +73,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# In production set FRONTEND_URL=https://your-app.onrender.com
+# In dev it falls back to * so local React works without config
+_frontend_url = os.getenv("FRONTEND_URL", "")
+_origins = [_frontend_url] if _frontend_url else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten in production
+    allow_origins=_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -117,7 +124,10 @@ def health():
 
 
 @app.post("/ingest", response_model=IngestResponse)
-async def ingest(file: UploadFile = File(...)):
+async def ingest(
+    file: Annotated[UploadFile, File(...)],
+    user: Annotated[dict, Depends(get_current_user)],
+):
     """Upload a PDF, TXT, MD, or DOCX file and index it."""
     suffix = Path(file.filename).suffix.lower()
     if suffix not in {".pdf", ".txt", ".md", ".docx"}:
@@ -136,14 +146,21 @@ async def ingest(file: UploadFile = File(...)):
 
 
 @app.post("/ingest/text")
-async def ingest_text(text: str = Form(...), source: str = Form("api_input")):
+async def ingest_text(
+    text: Annotated[str, Form(...)],
+    source: Annotated[str, Form("api_input")],
+    user: Annotated[dict, Depends(get_current_user)],
+):
     """Ingest raw text directly (useful for testing)."""
     result = state.pipeline.ingest_text(text, source=source)
     return result
 
 
 @app.post("/query", response_model=QueryResponse)
-def query(req: QueryRequest):
+def query(
+    req: QueryRequest,
+    user: Annotated[dict, Depends(get_current_user)],
+):
     """Query the agent with a natural language question."""
     if req.reset_history:
         state.agent.reset()
@@ -160,8 +177,9 @@ def query(req: QueryRequest):
 
 
 @app.delete("/history")
-def clear_history():
+def clear_history(
+    user: Annotated[dict, Depends(get_current_user)],
+):
     """Reset agent conversation history."""
     state.agent.reset()
     return {"status": "cleared"}
-

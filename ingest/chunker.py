@@ -45,8 +45,8 @@ class DocumentChunker:
 
     def __init__(
         self,
-        chunk_size: int = int(os.getenv("CHUNK_SIZE", 512)),
-        chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", 64)),
+        chunk_size: int = int(os.getenv("CHUNK_SIZE", "512")),
+        chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "64")),
     ):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap

@@ -48,8 +48,8 @@ class HybridRetriever:
         self.embedder = embedder
         self.vector_store = vector_store
         self.bm25 = bm25_index
-        self.dense_top_k = dense_top_k or int(os.getenv("DENSE_TOP_K", 20))
-        self.sparse_top_k = sparse_top_k or int(os.getenv("SPARSE_TOP_K", 20))
+        self.dense_top_k = dense_top_k or int(os.getenv("DENSE_TOP_K", "20"))
+        self.sparse_top_k = sparse_top_k or int(os.getenv("SPARSE_TOP_K", "20"))
 
     # ------------------------------------------------------------------
     # Public

@@ -65,7 +65,7 @@ class Reranker:
         Returns:
             Sorted list of candidates with 'rerank_score' added.
         """
-        top_k = top_k or int(os.getenv("RERANK_TOP_K", 5))
+        top_k = top_k or int(os.getenv("RERANK_TOP_K", "5"))
 
         if not candidates:
             return []

@@ -697,6 +697,7 @@ input, textarea { font-family: var(--font-sans); }
   font-family: var(--font-mono);
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   border-left: 2px solid var(--accent-muted);

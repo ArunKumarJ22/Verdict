@@ -14,12 +14,12 @@ Why guardrails matter for AI Engineer roles:
 Design: lightweight, no external API calls for guardrails themselves
 (avoids latency and cost). Uses Claude only for the agent core.
 """
-
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass
 from enum import Enum
+from typing import ClassVar
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -54,7 +54,7 @@ class InputGuard:
     """
 
     # Prompt injection / jailbreak signatures
-    _INJECTION_PATTERNS: list[re.Pattern] = [
+    _INJECTION_PATTERNS: ClassVar[list[re.Pattern]] = [
         re.compile(r"ignore (all |previous |prior |above |your )?(instructions?|prompts?|rules?)", re.IGNORECASE),
         re.compile(r"you are now", re.IGNORECASE),
         re.compile(r"act as (a |an )?(different|new|evil|unrestricted)", re.IGNORECASE),
@@ -117,7 +117,7 @@ class OutputGuard:
     _SSN_RE    = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 
     # Phrases that suggest the LLM is confabulating without retrieved context
-    _HALLUCINATION_SIGNALS = [
+    _HALLUCINATION_SIGNALS: ClassVar[list[re.Pattern]] = [
         re.compile(r"I (don't|do not) have (access to|information about)", re.IGNORECASE),
         re.compile(r"as (of|far as) my (knowledge|training|cutoff)", re.IGNORECASE),
         re.compile(r"I('m| am) (not sure|unsure|uncertain) but", re.IGNORECASE),
@@ -125,7 +125,7 @@ class OutputGuard:
     ]
 
     # LLM refusal bleed-through (should be caught by agent layer, but belt+suspenders)
-    _REFUSAL_SIGNALS = [
+    _REFUSAL_SIGNALS: ClassVar[list[re.Pattern]] = [
         re.compile(r"I('m| am) sorry,? I can('t|not)", re.IGNORECASE),
         re.compile(r"I('m| am) unable to (assist|help|provide)", re.IGNORECASE),
         re.compile(r"(violates?|against) (my |our )?(guidelines?|policies|terms)", re.IGNORECASE),

@@ -57,7 +57,7 @@ class VectorStore:
         else:
             # Local mode — host/port
             self.host = host or os.getenv("QDRANT_HOST", "localhost")
-            self.port = int(port or os.getenv("QDRANT_PORT", 6333))
+            self.port = int(port or os.getenv("QDRANT_PORT", "6333"))
             self._client = QdrantClient(host=self.host, port=self.port)
             print(f"[VectorStore] Connected to local Qdrant: {self.host}:{self.port}")
 

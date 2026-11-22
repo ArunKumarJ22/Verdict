@@ -92,7 +92,7 @@ class IngestPipeline:
             try:
                 result = self.ingest_file(f)
                 results.append(result)
-            except Exception as e:
+            except (OSError, ValueError, RuntimeError) as e:
                 rprint(f"[red]Error ingesting {f.name}: {e}[/red]")
 
         return results
