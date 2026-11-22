@@ -12,7 +12,6 @@ Design decisions:
 from __future__ import annotations
 
 import os
-from typing import List
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -45,7 +44,7 @@ class Embedder:
     def dimension(self) -> int:
         return self.model.get_sentence_embedding_dimension()
 
-    def embed_chunks(self, chunks: List[Chunk], batch_size: int = 64) -> List[np.ndarray]:
+    def embed_chunks(self, chunks: list[Chunk], batch_size: int = 64) -> list[np.ndarray]:
         """
         Encode a list of Chunk objects → list of float32 numpy arrays.
         Order is preserved.
@@ -53,7 +52,7 @@ class Embedder:
         texts = [c.text for c in chunks]
         return self.embed_texts(texts, batch_size=batch_size)
 
-    def embed_texts(self, texts: List[str], batch_size: int = 64) -> List[np.ndarray]:
+    def embed_texts(self, texts: list[str], batch_size: int = 64) -> list[np.ndarray]:
         """
         Encode raw strings. Returns list of numpy float32 vectors.
         Each vector is shape (dimension,).
@@ -102,6 +101,6 @@ if __name__ == "__main__":
     # Similarity check — first two should be more similar than 1 and 3
     sim_01 = float(np.dot(vectors[0], vectors[1]))
     sim_02 = float(np.dot(vectors[0], vectors[2]))
-    rprint(f"\n[bold green]Similarity checks:[/bold green]")
+    rprint("\n[bold green]Similarity checks:[/bold green]")
     rprint(f"  RAG vs BM25:        {sim_01:.4f}")
     rprint(f"  RAG vs cross-enc:   {sim_02:.4f}")

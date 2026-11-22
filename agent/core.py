@@ -18,17 +18,14 @@ Architecture:
 
 from __future__ import annotations
 
-import json
 import os
-from dataclasses import dataclass, field
-from typing import List
+from dataclasses import dataclass
 
 import anthropic
 
 from app_guardrails.guards import GuardRail, GuardStatus
-from retrieval.hybrid_retriever import HybridRetriever
 from reranker.cross_encoder import Reranker
-
+from retrieval.hybrid_retriever import HybridRetriever
 
 # ---------------------------------------------------------------------------
 # Data models
@@ -43,8 +40,8 @@ class Message:
 @dataclass
 class AgentResponse:
     answer: str
-    citations: List[dict]
-    guard_events: List[dict]
+    citations: list[dict]
+    guard_events: list[dict]
     tool_calls: int
     blocked: bool = False
     block_reason: str | None = None
@@ -129,7 +126,7 @@ class RAGAgent:
         self.reranker  = reranker
         self.guardrail = guardrail
         self.client    = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.history: List[Message] = []
+        self.history: list[Message] = []
 
     # ------------------------------------------------------------------
     # Public
@@ -137,7 +134,7 @@ class RAGAgent:
 
     def chat(self, user_query: str) -> AgentResponse:
         """Main entry point. Returns a structured AgentResponse."""
-        guard_events: List[dict] = []
+        guard_events: list[dict] = []
 
         # 1. Input guardrail
         input_check = self.guardrail.check_input(user_query)
@@ -155,7 +152,7 @@ class RAGAgent:
         messages = self._build_messages(user_query)
 
         # 3. Agentic loop
-        citations: List[dict] = []
+        citations: list[dict] = []
         tool_call_count = 0
         final_answer = ""
 
@@ -232,7 +229,7 @@ class RAGAgent:
         self,
         tool_name: str,
         tool_input: dict,
-        citations: List[dict],
+        citations: list[dict],
     ) -> str:
         if tool_name == "search_docs":
             query = tool_input["query"]

@@ -20,8 +20,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
-
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -56,14 +54,14 @@ class InputGuard:
     """
 
     # Prompt injection / jailbreak signatures
-    _INJECTION_PATTERNS: List[re.Pattern] = [
-        re.compile(r"ignore (all |previous |prior |above |your )?(instructions?|prompts?|rules?)", re.I),
-        re.compile(r"you are now", re.I),
-        re.compile(r"act as (a |an )?(different|new|evil|unrestricted)", re.I),
-        re.compile(r"(disregard|forget|override).{0,30}(instructions?|guidelines?|rules?)", re.I),
-        re.compile(r"(system prompt|system message|your prompt)", re.I),
-        re.compile(r"(jailbreak|dan mode|developer mode|god mode)", re.I),
-        re.compile(r"repeat (after me|the following|everything|your instructions)", re.I),
+    _INJECTION_PATTERNS: list[re.Pattern] = [
+        re.compile(r"ignore (all |previous |prior |above |your )?(instructions?|prompts?|rules?)", re.IGNORECASE),
+        re.compile(r"you are now", re.IGNORECASE),
+        re.compile(r"act as (a |an )?(different|new|evil|unrestricted)", re.IGNORECASE),
+        re.compile(r"(disregard|forget|override).{0,30}(instructions?|guidelines?|rules?)", re.IGNORECASE),
+        re.compile(r"(system prompt|system message|your prompt)", re.IGNORECASE),
+        re.compile(r"(jailbreak|dan mode|developer mode|god mode)", re.IGNORECASE),
+        re.compile(r"repeat (after me|the following|everything|your instructions)", re.IGNORECASE),
     ]
 
     _MAX_QUERY_TOKENS = 500   # ~375 words — prevents context stuffing
@@ -120,20 +118,20 @@ class OutputGuard:
 
     # Phrases that suggest the LLM is confabulating without retrieved context
     _HALLUCINATION_SIGNALS = [
-        re.compile(r"I (don't|do not) have (access to|information about)", re.I),
-        re.compile(r"as (of|far as) my (knowledge|training|cutoff)", re.I),
-        re.compile(r"I('m| am) (not sure|unsure|uncertain) but", re.I),
-        re.compile(r"I (think|believe|assume) (but|however|although)", re.I),
+        re.compile(r"I (don't|do not) have (access to|information about)", re.IGNORECASE),
+        re.compile(r"as (of|far as) my (knowledge|training|cutoff)", re.IGNORECASE),
+        re.compile(r"I('m| am) (not sure|unsure|uncertain) but", re.IGNORECASE),
+        re.compile(r"I (think|believe|assume) (but|however|although)", re.IGNORECASE),
     ]
 
     # LLM refusal bleed-through (should be caught by agent layer, but belt+suspenders)
     _REFUSAL_SIGNALS = [
-        re.compile(r"I('m| am) sorry,? I can('t|not)", re.I),
-        re.compile(r"I('m| am) unable to (assist|help|provide)", re.I),
-        re.compile(r"(violates?|against) (my |our )?(guidelines?|policies|terms)", re.I),
+        re.compile(r"I('m| am) sorry,? I can('t|not)", re.IGNORECASE),
+        re.compile(r"I('m| am) unable to (assist|help|provide)", re.IGNORECASE),
+        re.compile(r"(violates?|against) (my |our )?(guidelines?|policies|terms)", re.IGNORECASE),
     ]
 
-    def check(self, response: str, context_chunks: List[dict] | None = None) -> GuardResult:
+    def check(self, response: str, context_chunks: list[dict] | None = None) -> GuardResult:
         # 1. Empty response
         if not response or len(response.strip()) < 10:
             return GuardResult(
@@ -193,7 +191,7 @@ class GuardRail:
     def check_input(self, query: str) -> GuardResult:
         return self.input_guard.check(query)
 
-    def check_output(self, response: str, context: List[dict] | None = None) -> GuardResult:
+    def check_output(self, response: str, context: list[dict] | None = None) -> GuardResult:
         return self.output_guard.check(response, context)
 
 

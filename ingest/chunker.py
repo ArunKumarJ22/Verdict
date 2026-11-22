@@ -12,10 +12,8 @@ import hashlib
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
 
 import tiktoken
-
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -58,7 +56,7 @@ class DocumentChunker:
     # Public API
     # ------------------------------------------------------------------
 
-    def chunk_file(self, path: str | Path) -> List[Chunk]:
+    def chunk_file(self, path: str | Path) -> list[Chunk]:
         """Auto-detect file type and return chunks."""
         path = Path(path)
         suffix = path.suffix.lower()
@@ -72,13 +70,13 @@ class DocumentChunker:
         else:
             raise ValueError(f"Unsupported file type: {suffix}")
 
-        chunks: List[Chunk] = []
+        chunks: list[Chunk] = []
         for page_num, text in pages:
             chunks.extend(self._sliding_window(text, path.name, page_num))
 
         return chunks
 
-    def chunk_text(self, text: str, source: str = "inline") -> List[Chunk]:
+    def chunk_text(self, text: str, source: str = "inline") -> list[Chunk]:
         """Chunk a raw string directly (useful for tests / API ingestion)."""
         return self._sliding_window(text, source, page=None)
 
@@ -86,7 +84,7 @@ class DocumentChunker:
     # Loaders
     # ------------------------------------------------------------------
 
-    def _load_pdf(self, path: Path) -> List[tuple[int, str]]:
+    def _load_pdf(self, path: Path) -> list[tuple[int, str]]:
         from pypdf import PdfReader
         reader = PdfReader(str(path))
         pages = []
@@ -96,11 +94,11 @@ class DocumentChunker:
                 pages.append((i, text))
         return pages
 
-    def _load_text(self, path: Path) -> List[tuple[int, str]]:
+    def _load_text(self, path: Path) -> list[tuple[int, str]]:
         text = path.read_text(encoding="utf-8", errors="replace")
         return [(1, text)]
 
-    def _load_docx(self, path: Path) -> List[tuple[int, str]]:
+    def _load_docx(self, path: Path) -> list[tuple[int, str]]:
         from docx import Document
         doc = Document(str(path))
         full_text = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
@@ -115,13 +113,13 @@ class DocumentChunker:
         text: str,
         source: str,
         page: int | None,
-    ) -> List[Chunk]:
+    ) -> list[Chunk]:
         """
         Tokenize → slide a window of `chunk_size` tokens with
         `chunk_overlap` tokens of overlap between consecutive chunks.
         """
         tokens = self._enc.encode(text)
-        chunks: List[Chunk] = []
+        chunks: list[Chunk] = []
         step = self.chunk_size - self.chunk_overlap
         idx = 0
 

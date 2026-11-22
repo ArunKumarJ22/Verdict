@@ -18,7 +18,6 @@ Collection schema per point:
 from __future__ import annotations
 
 import os
-from typing import List
 
 from qdrant_client import QdrantClient
 from qdrant_client.http import models as qmodels
@@ -87,7 +86,7 @@ class VectorStore:
     # Write
     # ------------------------------------------------------------------
 
-    def upsert(self, chunks: List[Chunk], vectors: List) -> None:
+    def upsert(self, chunks: list[Chunk], vectors: list) -> None:
         """
         Store chunks and their vectors in Qdrant.
 
@@ -123,7 +122,7 @@ class VectorStore:
         query_vector,
         top_k: int = 20,
         source_filter: str | None = None,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """
         Dense similarity search.
 

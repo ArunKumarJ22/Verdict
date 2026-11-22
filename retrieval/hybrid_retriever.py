@@ -19,12 +19,10 @@ RRF formula:
 from __future__ import annotations
 
 import os
-from typing import List, Dict
 
+from ingest.bm25_index import BM25Index
 from ingest.embedder import Embedder
 from ingest.vector_store import VectorStore
-from ingest.bm25_index import BM25Index
-
 
 RRF_K = 60  # smoothing constant from "Reciprocal Rank Fusion" Cormack et al. 2009
 
@@ -57,7 +55,7 @@ class HybridRetriever:
     # Public
     # ------------------------------------------------------------------
 
-    def retrieve(self, query: str) -> List[dict]:
+    def retrieve(self, query: str) -> list[dict]:
         """
         Run hybrid retrieval and return RRF-fused candidates.
 
@@ -84,16 +82,16 @@ class HybridRetriever:
 
     def _rrf_fuse(
         self,
-        dense: List[dict],
-        sparse: List[dict],
-    ) -> List[dict]:
+        dense: list[dict],
+        sparse: list[dict],
+    ) -> list[dict]:
         """
         Merge two ranked lists with Reciprocal Rank Fusion.
 
         Uses chunk_id as the deduplication key.
         """
         # Map chunk_id → metadata for all candidates
-        candidates: Dict[str, dict] = {}
+        candidates: dict[str, dict] = {}
 
         for rank, item in enumerate(dense, start=1):
             cid = item["chunk_id"]
@@ -124,7 +122,7 @@ class HybridRetriever:
 
         return fused
 
-    def stats(self, results: List[dict]) -> dict:
+    def stats(self, results: list[dict]) -> dict:
         """Return breakdown of how many results came from each source."""
         dense_only = sum(1 for r in results if r.get("sparse_rank") is None)
         sparse_only = sum(1 for r in results if r.get("dense_rank") is None)

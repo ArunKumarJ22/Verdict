@@ -13,18 +13,16 @@ We persist the index to disk so it survives restarts without re-indexing.
 
 from __future__ import annotations
 
-import json
 import pickle
 import re
 from pathlib import Path
-from typing import List
 
 from rank_bm25 import BM25Okapi
 
 from ingest.chunker import Chunk
 
 
-def _tokenize(text: str) -> List[str]:
+def _tokenize(text: str) -> list[str]:
     """
     Simple whitespace + lowercase tokenizer.
     For production: add stemming (nltk SnowballStemmer) or
@@ -44,15 +42,15 @@ class BM25Index:
     """
 
     def __init__(self):
-        self._chunks: List[dict] = []     # parallel to BM25 corpus
-        self._corpus: List[List[str]] = []
+        self._chunks: list[dict] = []     # parallel to BM25 corpus
+        self._corpus: list[list[str]] = []
         self._bm25: BM25Okapi | None = None
 
     # ------------------------------------------------------------------
     # Build / update
     # ------------------------------------------------------------------
 
-    def add(self, chunks: List[Chunk]) -> None:
+    def add(self, chunks: list[Chunk]) -> None:
         """Add chunks to the index. Rebuilds BM25 internally."""
         for chunk in chunks:
             self._corpus.append(_tokenize(chunk.text))
@@ -73,7 +71,7 @@ class BM25Index:
     # Search
     # ------------------------------------------------------------------
 
-    def search(self, query: str, top_k: int = 20) -> List[dict]:
+    def search(self, query: str, top_k: int = 20) -> list[dict]:
         """
         BM25 retrieval.
 
@@ -136,6 +134,7 @@ class BM25Index:
 
 if __name__ == "__main__":
     from rich import print as rprint
+
     from ingest.chunker import DocumentChunker
 
     sample_docs = [

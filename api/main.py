@@ -10,10 +10,8 @@ FastAPI backend exposing three endpoints:
 
 from __future__ import annotations
 
-import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -23,15 +21,11 @@ from pydantic import BaseModel
 load_dotenv()
 
 # Import pipeline components
-from ingest.pipeline import IngestPipeline
-from ingest.embedder import Embedder
-from ingest.vector_store import VectorStore
-from ingest.bm25_index import BM25Index
-from retrieval.hybrid_retriever import HybridRetriever
-from reranker.cross_encoder import Reranker
-from app_guardrails.guards import GuardRail
 from agent.core import RAGAgent
-
+from app_guardrails.guards import GuardRail
+from ingest.pipeline import IngestPipeline
+from reranker.cross_encoder import Reranker
+from retrieval.hybrid_retriever import HybridRetriever
 
 # ---------------------------------------------------------------------------
 # App state (singletons, initialised once at startup)

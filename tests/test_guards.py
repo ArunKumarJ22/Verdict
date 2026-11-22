@@ -4,6 +4,7 @@ These run in CI without needing Qdrant or the Anthropic API.
 """
 
 import pytest
+
 from app_guardrails.guards import GuardRail, GuardStatus
 
 

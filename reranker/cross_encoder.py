@@ -22,7 +22,6 @@ Default model: cross-encoder/ms-marco-MiniLM-L-6-v2
 from __future__ import annotations
 
 import os
-from typing import List
 
 from sentence_transformers import CrossEncoder
 
@@ -52,9 +51,9 @@ class Reranker:
     def rerank(
         self,
         query: str,
-        candidates: List[dict],
+        candidates: list[dict],
         top_k: int | None = None,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """
         Re-rank candidates against query.
 

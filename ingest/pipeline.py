@@ -17,16 +17,14 @@ from __future__ import annotations
 import os
 import time
 from pathlib import Path
-from typing import List
 
 from rich import print as rprint
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from ingest.chunker import DocumentChunker, Chunk
+from ingest.bm25_index import BM25Index
+from ingest.chunker import Chunk, DocumentChunker
 from ingest.embedder import Embedder
 from ingest.vector_store import VectorStore
-from ingest.bm25_index import BM25Index
-
 
 BM25_INDEX_PATH = Path(os.getenv("BM25_INDEX_PATH", "data/bm25_index.pkl"))
 
@@ -78,7 +76,7 @@ class IngestPipeline:
         chunks = self.chunker.chunk_text(text, source=source)
         return self._index_chunks(chunks, elapsed_start=t0)
 
-    def ingest_directory(self, dir_path: str | Path) -> List[dict]:
+    def ingest_directory(self, dir_path: str | Path) -> list[dict]:
         """Ingest all supported files in a directory."""
         dir_path = Path(dir_path)
         supported = {".pdf", ".txt", ".md", ".docx"}
@@ -103,7 +101,7 @@ class IngestPipeline:
     # Internal
     # ------------------------------------------------------------------
 
-    def _index_chunks(self, chunks: List[Chunk], elapsed_start: float) -> dict:
+    def _index_chunks(self, chunks: list[Chunk], elapsed_start: float) -> dict:
         if not chunks:
             return {"status": "empty", "chunks": 0}
 
@@ -138,7 +136,7 @@ class IngestPipeline:
             "bm25_total": len(self.bm25),
         }
 
-        rprint(f"\n[bold green]✓ Ingest complete[/bold green]")
+        rprint("\n[bold green]✓ Ingest complete[/bold green]")
         rprint(f"  chunks={result['chunks']} | "
                f"qdrant_total={result['vector_store_total']} | "
                f"bm25_total={result['bm25_total']} | "
