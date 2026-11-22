@@ -1,3 +1,7 @@
 [tool.ruff]
 
 [tool.ruff.lint]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
