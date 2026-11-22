@@ -12,6 +12,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.venv312/
 venv/
 
 # Node
@@ -30,3 +31,8 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+frontend/
+.ruff_cache/
+.idea/
+.vscode/

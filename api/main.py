@@ -148,8 +148,8 @@ async def ingest(
 @app.post("/ingest/text")
 async def ingest_text(
     text: Annotated[str, Form(...)],
-    source: Annotated[str, Form("api_input")],
     user: Annotated[dict, Depends(get_current_user)],
+    source: Annotated[str, Form()] = "api_input",
 ):
     """Ingest raw text directly (useful for testing)."""
     result = state.pipeline.ingest_text(text, source=source)

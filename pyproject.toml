@@ -1,4 +1,10 @@
 [tool.ruff]
+exclude = [
+    ".venv",
+    ".venv312",
+    "venv",
+    "__pycache__",
+]
 
 [tool.ruff.lint]
 
